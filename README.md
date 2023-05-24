@@ -4,7 +4,7 @@ Code Fellows - Code 401 - Class 08 Lab
 
 - server deploy:
 
-  - [BasicDeploy]()
+  - [BasicDeploy](https://auth-api-jbd4.onrender.com)
 
 - Github Actions:
 
@@ -16,19 +16,21 @@ Code Fellows - Code 401 - Class 08 Lab
 
 ## Server
 
-URL: 
+URL: https://auth-api-jbd4.onrender.com
 
 Endpoint: /signup
 Endpoint: /signin
 Endpoint: /login
 Endpoint: /users
+Endpoint: /cards
+Endpoint: /clothes
 
 
-Example: https://bearer-auth-cjlh.onrender.com/signup
+Example: https://auth-api-jbd4.onrender.com/signup
 
 ## UML Architecture
 
-![UML Architecture](./UML-diagram.jpeg)
+![UML Architecture](./UMLDiagram.jpeg)
 
 ## Takeaways
 
