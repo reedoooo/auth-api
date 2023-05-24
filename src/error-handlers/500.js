@@ -1,7 +1,7 @@
 
 'use strict';
 
-function handle500(err, req, res, next) {
+module.exports = function (err, req, res, next) {
 
   // Sometimes, errors come in as an object, others as a string
   const error = err.message ? err.message : err;
@@ -12,5 +12,3 @@ function handle500(err, req, res, next) {
   };
   res.status(500).json(errorObject);
 };
-
-module.exports = handle500;

@@ -4,35 +4,26 @@
 const base64 = require('base-64');
 
 // Import the users model from the models directory
-const { users } = require('../models/index.js');
+const { users } = require('../models');
 
 
 // Export a middleware function for basic authentication
-const basicAuth = async (req, res, next) => {
+module.exports = async (req, res, next) => {
+
+  if (!req.headers.authorization) { return _authError(); }
+
+  let basic = req.headers.authorization.split(' ').pop();
+  let [user, pass] = base64.decode(basic).split(':');
+
   try {
-    if (!req.headers.authorization) { 
-      next('Authentication Required');
-      return; // Stop execution if no authorization header is present
-    }
-
-    let credentials = req.headers.authorization.split(' ')[1];
-    let [username, password] = base64.decode(credentials).split(':'); 
-
-    const validUser = await users.authenticateBasic(username, password);
-
-    if (validUser) { // Check if the user is valid
-      req.user = validUser;
-      next();
-    } else {
-      next('Invalid Login'); // Call next with error if the user is not valid
-    }
+    req.user = await users.authenticateBasic(user, pass)
+    next();
   } catch (e) {
-
-    res.status(403).send('Invalid Login');
-    next(e); // Call next with error to stop execution
+    _authError()
   }
+
+  function _authError() {
+    res.status(403).send('Invalid Login');
+  }
+
 }
-
-
-// Export the middleware function
-module.exports = basicAuth;

@@ -2,7 +2,8 @@
 
 // This middleware function will be used to check the capabilities of the user
 // against the capability required for the route
-function Permissions(capability) {
+module.exports = (capability) => {
+
   return (req, res, next) => {
 
     try {
@@ -19,6 +20,3 @@ function Permissions(capability) {
   }
 
 }
-
-// Export the middleware function
-module.exports = Permissions;

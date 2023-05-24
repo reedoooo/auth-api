@@ -1,13 +1,12 @@
 'use strict';
 
-// Define an Express middleware function for logging requests
+// All middleware has access to the request.
+// Here, we're simply logging out the interesting parts
 const logger = (req, res, next) => {
-    // Log the HTTP method and the requested URL
-    console.log(`${req.method} ${req.url}`);
+  console.log('REQUEST:', req.method, req.path);
 
-    // Proceed to the next middleware function or route handler
-    next();
+  // Call next() so that the next function in line can do it's work
+  next();
 };
 
-// Export the middleware function
 module.exports = logger;

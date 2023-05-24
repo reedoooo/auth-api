@@ -1,24 +1,27 @@
 "use strict";
 
 // Import the users model from the models directory
-const { users } = require("../models/index.js");
+const { users } = require("../models");
 
 // Define an Express middleware function for bearer token authentication
-const bearer = async (req, res, next) => {
-    try {
-      const token = req.headers.authorization.split(' ').pop();
-      const user = await users.authenticateToken(token);
-  
-      req.user = user;
-      req.token = user.token;
-      next();
-    } catch (error) {
-    //   console.error('Invalid token:', error);
-      res.status(403).send("Invalid Login");
-      next(error); // Call next with error to stop execution
-    }
-  };
-  
+module.exports = async (req, res, next) => {
 
-// Export the middleware function
-module.exports = bearer;
+  try {
+
+    if (!req.headers.authorization) { _authError() }
+
+    const token = req.headers.authorization.split(' ').pop();
+    const validUser = await users.authenticateToken(token);
+    console.log('BEARER AUTH TOKEN: ', validUser);
+    req.user = validUser;
+    req.token = validUser.token;
+    next();
+
+  } catch (e) {
+    _authError();
+  }
+
+  function _authError() {
+    next('Invalid Login');
+  }
+}

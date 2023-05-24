@@ -1,20 +1,24 @@
-'use strict'
-
 const server = require('../src/server');
-const { db, users } = require('../src/auth/models/index');
-const {cardsAndClothesDB} = require('../auth/models/index');
+const { userDB, users } = require('../src/auth/models/index');
+const { cardsAndClothesDB } = require('../src/models/index');
 const supertest = require('supertest');
 const app = supertest(server.server);
 
 beforeAll(async() => {
-  await db.sync();
-  await cardsAndClothesDB.sync();
+  await userDB.sync()
+  await cardsAndClothesDB.sync()
 })
 
 afterAll(async() => {
-  await db.drop();
-  await cardsAndClothesDB.drop();
+
+  await userDB.drop()
+  await cardsAndClothesDB.drop()
+  // await new Promise((resolve) => setTimeout(() => resolve(), 1000));
 })
+
+// afterEach(async () => {
+//   await userDB.close();
+// });
 
 describe('Testing V2 routes', () => {
 
@@ -22,21 +26,21 @@ describe('Testing V2 routes', () => {
     username: 'admin',
     password: 'password',
     role: 'admin'
-  }
+  };
 
-  let card = {
+  let cards = {
     name: 'Dark Magician Girl',
     type: 'spellcaster',
     level: 7,
     monster: true,
-  }
+  };
 
-  let clothing = {
+  let clothes = {
     type: 'belt',
     color: 'black',
     size: 'large',
     expensive: true,
-  }
+  };
 
   let token;
 
@@ -45,19 +49,25 @@ describe('Testing V2 routes', () => {
 
     token = res.body.user.token;
 
-    let response = await app.post('/api/v2/cards').set(`Authorization`, `Bearer ${token}`).send(cards);
+    let response = await app
+      .post('/api/v2/cards')
+      .set('Authorization', `Bearer ${token}`)
+      .send(cards);
 
     expect(response.body.name).toBe('Dark Magician Girl');
     expect(response.body.level).toBe(7);
     expect(response.body.type).toBe('spellcaster');
-  })
+    expect(response.body.monster).toBe(true);
+
+  });
 
   test('Can POST to clothes', async () => {
-    let response = await app.post('/api/v2/clothes').set(`Authorization`, `Bearer ${token}`).send(clothing);
+    let response = await app.post('/api/v2/clothes').set(`Authorization`, `Bearer ${token}`).send(clothes);
 
     expect(response.body.type).toBe('belt');
     expect(response.body.color).toBe('black');
     expect(response.body.size).toBe('large');
+    expect(response.body.expensive).toBe(true);
   })
 
   test('Can GET ALL from cards', async () => {
