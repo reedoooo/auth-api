@@ -30,7 +30,7 @@ Example: https://auth-api-jbd4.onrender.com/signup
 
 ## UML Architecture
 
-![UML Architecture](./UMLDiagram.jpeg)
+![UML Architecture](https://github.com/reedoooo/auth-api/blob/d36cc99cd2aeb99ebf1687b8458332082846bdd0/UmlDiagram.jpeg)
 
 ## Takeaways
 
